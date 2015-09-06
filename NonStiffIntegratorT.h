@@ -116,6 +116,7 @@ code to your problem, you can specify particular initial values.
 #define _NON_STIFF_INTEGRATOR_T_H_
 
 #include "IntegratorT.h"
+#include <cstring>
 
 class NonStiffIntegratorT : public IntegratorT
 {

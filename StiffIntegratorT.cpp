@@ -8,6 +8,13 @@
 
 #include "StiffIntegratorT.h"
 
+using std::cout;
+using std::endl;
+using std::setprecision;
+using std::setw;
+
+
+
 // Constructor
 StiffIntegratorT::StiffIntegratorT(const int nin, double yin[], double xin, double xendin,
 	double dxin, int itolerin, double *rtolerin, double *atolerin, const int ioutin,
@@ -52,10 +59,10 @@ StiffIntegratorT::StiffIntegratorT(const int nin, double yin[], double xin, doub
 			}
 		}
 	}
-	
+
 	// initial step length
 	if (fabs(h) < 10.0*uround) h = 1.0e-6;
-	
+
 	// facl, facr--parameters for step size selection
 	if (facl == 0.0) facl = 5.0;
 	if (facr == 0.0) facr = 1.0/8.0;
@@ -252,10 +259,10 @@ StiffIntegratorT::StiffIntegratorT(const int nin, double yin[], double xin, doub
 			}
 		}
 	}
-	
+
 	// initial step length
 	if (fabs(h) < 10.0*uround) h = 1.0e-6;
-	
+
 	// facl, facr--parameters for step size selection
 	if (facl == 0.0) facl = 5.0;
 	if (facr == 0.0) facr = 1.0/8.0;
@@ -880,7 +887,7 @@ int StiffIntegratorT::CoreIntegrator()
 			break;
 		}
 	}
-	
+
 	return 1;
 }  // CoreIntegrator
 
@@ -2039,4 +2046,3 @@ int StiffIntegratorT::ErrorEstimate()
 	return (ier);
 
 } // ErrorEstimate
-

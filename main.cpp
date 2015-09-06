@@ -3,6 +3,9 @@
 #include "StiffIntegratorT.h"
 #include "NonStiffIntegratorT.h"
 
+using std::cout;
+using std::endl;
+
 int main ()
 {
 	// dimension of problem
@@ -35,7 +38,7 @@ int main ()
 	const int imas = 0;
 	int mlmas = 0;
 	int mumas = 0;
-	
+
 	// Use default values (see header files) for these parameters:
 	double hmax(0.0);
 	int nmax(0);
@@ -52,9 +55,9 @@ int main ()
 		m1, m2, hess, fnewt, quot1, quot2, thet);
 
 	cout << "\n\n*******Problem integrated with RADAU5*******\n\n";
-	
+
 	stiffT.Integrate();
-	
+
 	// print statistics
 	cout << "fcn = " << stiffT.NumFunction() <<
 		    " jac = " << stiffT.NumJacobian() <<

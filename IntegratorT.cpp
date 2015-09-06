@@ -1,5 +1,5 @@
 /***************************************************************************
-                               IntegratorT.cpp
+ IntegratorT.cpp
                              -------------------
     written by           : Blake Ashby
     last updated         : Nov 15, 2002
@@ -8,6 +8,12 @@
 
 
 #include "IntegratorT.h"
+
+using std::cout;
+using std::endl;
+using std::setprecision;
+using std::setw;
+using std::setiosflags;
 
 // constructors
 
@@ -22,11 +28,11 @@ IntegratorT::IntegratorT(const int nin, double yin[], double xin, const double x
 	nfcn(0), nstep(0), naccpt(0), nrejct(0), xold(xin), hold(hin), xd(xin)
 {
 	// n, the dimension of the system
-	if (n == UINT_MAX) {
-		cout << "System too big, max. n = " << UINT_MAX - 1 << endl;
+	if (n == std::numeric_limits<int>::max()) {
+		cout << "System too big, max. n = " << std::numeric_limits<int>::max() - 1 << endl;
 		throw -1;
 	}
-	
+
 	// rtoler, the relative tolerance of the integration
 	if (!rtoler) {
 		itoler = 0;
@@ -34,7 +40,7 @@ IntegratorT::IntegratorT(const int nin, double yin[], double xin, const double x
 		*rtoler = 1.0e-7;
 		rtolerNULL = true;
 	}
-	
+
 	// atoler, the absolute tolerance of the integration
 	if (!atoler) {
 		itoler = 0;
@@ -52,14 +58,14 @@ IntegratorT::IntegratorT(const int nin, double yin[], double xin, const double x
 		cout << " wrong input, nmax = " << nmax << endl;
 		throw -1;
 	}
-	
+
 	// -------- uround--smallest number satisfying 1.0 + uround > 1.0
 	if (uround == 0.0) uround = 1.0e-16;
 	if ((uround <= 1.0e-19) || (uround >= 1.0)) {
 		cout << " coefficients have 20 digits, uround = " << uround << endl;
 		throw -1;
 	}
-	
+
 	// --------- safe--safety factor in step size prediction
 	if (safe == 0.0) safe = 0.9;
 	if ((safe <= 0.001) || (safe >= 1.0)) {
@@ -80,7 +86,7 @@ IntegratorT::~IntegratorT()
 // Modify this routine according to your needs
 int IntegratorT::SolutionOutput()
 {
-	cout << setiosflags(ios::showpoint);// | ios::fixed);
+	cout << std::showpoint;
 
 	if (naccpt == 0) xd = xold;
 

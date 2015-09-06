@@ -23,11 +23,11 @@ more details.
 #ifndef _INTEGRATOR_T_H_
 #define _INTEGRATOR_T_H_
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 #include <math.h>
 #include <stdlib.h>
-#include <limits.h>
+#include <limits>
 #include <decsol.h>
 
 void Function(double x, double *y, double *f);

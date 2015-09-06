@@ -16,7 +16,7 @@ code provided by:
  ***************************************************************************/
 
 #include "decsol.h"
-
+#include <math.h>
 int dec(const int n, double **A, int *ip)
 {
 
@@ -131,14 +131,14 @@ void sol(const int n, double **A, double *b, int *ip)
 			kb = km1 + 1;
 			b[kb] = b[kb]/A[kb][kb];
 			t = -b[kb];
-			for (int i = 0; i <= km1; i++) 
+			for (int i = 0; i <= km1; i++)
 				b[i] += A[i][kb]*t;
 		}
 	}
 	b[0] = b[0]/A[0][0];
-	
+
 	return;
-	
+
 } //sol
 
 
@@ -148,31 +148,31 @@ int dech(const int n, double **A, int lb, int *ip)
 /*-----------------------------------------------------------------------
 	Matrix Triangularization by Gaussian Elimination of a Hessenberg
 		matrix with lower bandwidth lb
-	
+
 	Input:
 		n		order of matrix
 		A		matrix to be triangularized
 		lb		lower bandwidth of A (diagonal is not counted, lb >= 1)
-		
+
 	Output:
 		A[i][j], i <= j		upper triangular factor, U
 		A[i][j], i > j		multipliers = lower triangular factor, i - l
 		ip[k], k < n - 1	index of k-th pivot row
 		ip[n-1] 			(-1)^(number of interchanges) or 0
-		ier 				0 if matrix A is nonsingular, or k if found 
+		ier 				0 if matrix A is nonsingular, or k if found
 								to be singular at stage k
 
 	Use solh to obtain solution of linear system
-	
+
 	determ(A) = ip[n-1]*A[0][0]*A[1][1]*...*A[n-1][n-1]
-	
+
 	If ip[n-1] = 0, A is singular, solh will divide by zero
-	
+
 	Reference:
 		This is a slight modification of
 		C.B. Moler, Algorithm 423, Linear Equation Solver,
 		C.A.C.M. 15 (1972), p. 274.
------------------------------------------------------------------------*/	  
+-----------------------------------------------------------------------*/
 
 	int kp1, m, nm1, k, na, ier;
 	double t;
@@ -207,9 +207,9 @@ int dech(const int n, double **A, int lb, int *ip)
 				A[m][j] = A[k][j];
 				A[k][j] = t;
 				if (t != 0.0)
-					for (int i = kp1; i < na; i++) 
-						A[i][j] += A[i][k]*t;	
-			}	
+					for (int i = kp1; i < na; i++)
+						A[i][j] += A[i][k]*t;
+			}
 		}
 	}
 	k = n;
@@ -217,7 +217,7 @@ int dech(const int n, double **A, int lb, int *ip)
 		ier = k;
 		ip[n-1] = 0;
 	}
-	
+
 	return (ier);
 
 } //dech
@@ -228,16 +228,16 @@ void solh(const int n, double **A, int lb, double *b, int *ip)
 
 /*-----------------------------------------------------------------------
 	Solution of linear system A*x = b -- Hessenberg matrix
-	
+
 	Input:
 		n		order of matrix
 		A		triangularized matrix obtained from dech
 		lb		lower bandwidth of A
 		b		right hand side vector
 		ip		pivot vector obtained from dec
-		
+
 	Do not use if dec has set ier != 0
-	
+
 	Output:
 		b		solution vector, x
 
@@ -263,12 +263,12 @@ void solh(const int n, double **A, int lb, double *b, int *ip)
 			kb = km1 + 1;
 			b[kb] = b[kb]/A[kb][kb];
 			t = -b[kb];
-			for (int i = 0; i <= km1; i++) 
+			for (int i = 0; i <= km1; i++)
 				b[i] += A[i][kb]*t;
 		}
 	}
 	b[0] = b[0]/A[0][0];
-	
+
 	return;
 
 } //solh
@@ -279,31 +279,31 @@ int decc(const int n, double **AR, double **AI, int *ip)
 /*-----------------------------------------------------------------------
 	Matrix Triangularization by Gaussian Elimination
 	------ Modification for complex matrices -------
-	
+
 	Input:
 		n			order of matrix
 		AR, AI		matrix to be triangularized
-		
+
 	Output:
 		AR[i][j], i <= j	upper triangular factor, U; real part
 		AI[i][j], i <= j	upper triangular factor, U; imaginary part
-		AR[i][j], i > j		multipliers = lower triangular factor, i - l 
+		AR[i][j], i > j		multipliers = lower triangular factor, i - l
 								real part
 		AI[i][j], i > j		multipliers = lower triangular factor, i - l
 								imaginary part
 		ip[k], k < n - 1	index of k-th pivot row
 		ip[n-1]				(-1)^(number of interchanges) or 0
-		ier					0 if matrix A is nonsingular, or k if found 
+		ier					0 if matrix A is nonsingular, or k if found
 								to be singular at stage k
-			
+
 	Use solc to obtain solution of linear system
-	
+
 	If ip[n-1] = 0, A is singular, sol will divide by zero
-	
+
 	Reference:
 		C.B. Moler, Algorithm 423, Linear Equation Solver,
 		C.A.C.M. 15 (1972), p. 274.
------------------------------------------------------------------------*/	  
+-----------------------------------------------------------------------*/
 
 	int kp1, m, nm1, k, ier;
 	double tr, ti, den, prodr, prodi;
@@ -317,7 +317,7 @@ int decc(const int n, double **AR, double **AI, int *ip)
 			m = k;
 			for (int i = kp1; i < n; i++) {
 				if ((fabs(AR[i][k]) + fabs(AI[i][k])) >
-					(fabs(AR[m][k]) + fabs(AI[m][k]))) 
+					(fabs(AR[m][k]) + fabs(AI[m][k])))
 					m = i;
 			}
 			ip[k] = m;
@@ -378,8 +378,8 @@ int decc(const int n, double **AR, double **AI, int *ip)
 					}
 				}
 			}
-		}	
-	}	
+		}
+	}
 	k = n;
 	if ((fabs(AR[n-1][n-1]) + fabs(AI[n-1][n-1])) == 0.0) {
 		ier = k;
@@ -396,15 +396,15 @@ void solc(const int n, double **AR, double **AI, double *br,
 
 /*-----------------------------------------------------------------------
 	Solution of linear system A*x = b
-	
+
 	Input:
 		n			order of matrix
 		AR, AI		triangularized matrix obtained from decc
 		br, bi		right hand side vector
 		ip			pivot vector obtained from dec
-		
+
 	Do not use if decc has set ier != 0
-	
+
 	Output:
 		br, bi		solution vector, x
 
@@ -412,7 +412,7 @@ void solc(const int n, double **AR, double **AI, double *br,
 
 	int nm1, kp1, m, kb, km1;
 	double den, prodr, prodi, tr, ti;
-	  
+
 	if (n != 1) {
 		nm1 = n - 1;
 		for (int k = 0; k < nm1; k++) {
@@ -430,7 +430,7 @@ void solc(const int n, double **AR, double **AI, double *br,
 				br[i] += prodr;
 				bi[i] += prodi;
 			}
-		} 
+		}
  		for (int k = 0; k < nm1; k++) {
 			km1 = n - k - 2;
 			kb = km1 + 1;
@@ -454,9 +454,9 @@ void solc(const int n, double **AR, double **AI, double *br,
 	prodi = bi[0]*AR[0][0] - br[0]*AI[0][0];
 	br[0] = prodr/den;
 	bi[0] = prodi/den;
-	
+
 	return;
-		
+
 } // solc
 
 int dechc(const int n, double **AR, double **AI, int lb, int *ip)
@@ -465,24 +465,24 @@ int dechc(const int n, double **AR, double **AI, int lb, int *ip)
 /*-----------------------------------------------------------------------
 	Matrix Triangularization by Gaussian Elimination
 	------ Modification for complex matrices -------
-	
+
 	Input:
 		n			order of matrix
 		AR, AI		matrix to be triangularized
-		
+
 	Output:
 		AR[i][j], i <= j	upper triangular factor, U; real part
 		AI[i][j], i <= j	upper triangular factor, U; imaginary part
-		AR[i][j], i > j		multipliers = lower triangular factor, i - l 
+		AR[i][j], i > j		multipliers = lower triangular factor, i - l
 								real part
-		AI[i][j], i > j		multipliers = lower triangular factor, i - l 
+		AI[i][j], i > j		multipliers = lower triangular factor, i - l
 								imaginary part
 		lb					lower bandwidth of A (diagonal not counted), lb >= 1
 		ip[k], k < n - 1	index of k-th pivot row
 		ip[n-1]				(-1)^(number of interchanges) or 0
 		ier					0 if matrix A is nonsingular, or k if found
 								to be singular at stage k
-			
+
 	Use solhc to obtain solution of linear system
 
 	If ip[n-1] = 0, A is singular, solhc will divide by zero
@@ -490,11 +490,11 @@ int dechc(const int n, double **AR, double **AI, int lb, int *ip)
 	Reference:
 		C.B. Moler, Algorithm 423, Linear Equation Solver,
 		C.A.C.M. 15 (1972), p. 274.
------------------------------------------------------------------------*/	  
+-----------------------------------------------------------------------*/
 
 	int kp1, m, nm1, k, na, ier;
 	double tr, ti, den, prodr, prodi;
- 
+
 	ier = 0;
 	ip[n-1] = 1;
 	if ((n != 1) && (lb != 0)) {
@@ -504,8 +504,8 @@ int dechc(const int n, double **AR, double **AI, int lb, int *ip)
 			m = k;
 			na = min(n, lb+k+1);
 			for (int i = kp1; i < na; i++) {
-				if ((fabs(AR[i][k]) + fabs(AI[i][k])) > 
-					(fabs(AR[m][k]) + fabs(AI[m][k]))) 
+				if ((fabs(AR[i][k]) + fabs(AI[i][k])) >
+					(fabs(AR[m][k]) + fabs(AI[m][k])))
 					m = i;
 			}
 			ip[k] = m;
@@ -566,8 +566,8 @@ int dechc(const int n, double **AR, double **AI, int lb, int *ip)
 					}
 				}
 			}
-		}	
-	}	
+		}
+	}
 	k = n;
 	if ((fabs(AR[n-1][n-1]) + fabs(AI[n-1][n-1])) == 0.0) {
 		ier = k;
@@ -591,9 +591,9 @@ void solhc(const int n, double **AR, double **AI, int lb,
 		br, bi		right hand side vector
 		lb			lower bandwidth of A
 		ip			pivot vector obtained from dec
-		
+
 	Do not use if dechc has set ier != 0
-	
+
 	Output:
 		br, bi		solution vector, x
 
@@ -601,7 +601,7 @@ void solhc(const int n, double **AR, double **AI, int lb,
 
 	int nm1, kp1, m, kb, km1;
 	double den, prodr, prodi, tr, ti;
-	  
+
 	if (n != 1) {
 		nm1 = n - 1;
 		if (lb != 0) {
@@ -645,7 +645,7 @@ void solhc(const int n, double **AR, double **AI, int lb,
 	prodi = bi[0]*AR[0][0] - br[0]*AI[0][0];
 	br[0] = prodr/den;
 	bi[0] = prodi/den;
-	
+
 	return;
 
 }
@@ -656,31 +656,31 @@ int decb(const int n, double **A, int ml, int mu, int *ip)
 /*-----------------------------------------------------------------------
 	Matrix Triangularization by Gaussian Elimination of a banded
 		matrix with lower bandwidth ml and upper bandwidth mu
-	
+
 	Input:
 		n		order of matrix
 		A		contains the matrix in band storage.
 				The columns of the matrix are stored in the columns
-				of A and the diagonals of the matrix are stored in 
+				of A and the diagonals of the matrix are stored in
 				rows ml	through 2*ml + mu of A.
 		ml		lower bandwidth of A (diagonal is not counted)
 		mu		upper bandwidth of A (diagonal is not counted)
-				
+
 	Output:
 		A 		upper triangular matrix in band storage and the
 				multipliers which were used to obtain it
 		ip		index vector of pivot indices
 		ip[n-1]	(-1)^(number of interchanges) or 0
-		ier		0 if matrix A is nonsingular, or k if found to be 
+		ier		0 if matrix A is nonsingular, or k if found to be
 					singular at stage k
-			
+
 	Use solb to obtain solution of linear system
-	
+
 	determ(A) = ip[n-1]*A[md][0]*A[md][1]*...*A[md][n-1] with
 			md = ml + mu
-	
+
 	If ip[n-1] = 0, A is singular, solb will divide by zero
-	
+
 	Reference:
 		This is a modification of:
 		C.B. Moler, Algorithm 423, Linear Equation Solver,
@@ -697,15 +697,15 @@ int decb(const int n, double **A, int ml, int mu, int *ip)
 	ju = 0;
 	if ((n != 1) && (ml != 0)) {
 		if (n >= mu+2)
-			for (int j = mu + 1; j < n; j++) 
-				for (int i = 0; i < ml; i++) 
+			for (int j = mu + 1; j < n; j++)
+				for (int i = 0; i < ml; i++)
 					A[i][j] = 0.0;
 		nm1 = n - 1;
 		for (k = 0; k < nm1; k++) {
 			kp1 = k + 1;
 			m = md;
-			mdl = min(ml, n - k - 1) + md;   
-			for (int i = md1; i <= mdl; i++) { 
+			mdl = min(ml, n - k - 1) + md;
+			for (int i = md1; i <= mdl; i++) {
 				if (fabs(A[i][k]) > fabs(A[m][k])) m = i;
 			}
 			ip[k] = m + k - md;
@@ -721,7 +721,7 @@ int decb(const int n, double **A, int ml, int mu, int *ip)
 				return (ier);
 			}
 			t = 1.0/t;
-			for (int i = md1; i <= mdl; i++) A[i][k] *= -t; 
+			for (int i = md1; i <= mdl; i++) A[i][k] *= -t;
 			ju = min(max(ju, mu+ip[k]+1), n);
 			mm = md;
 			if (ju >= kp1) {
@@ -737,26 +737,26 @@ int decb(const int n, double **A, int ml, int mu, int *ip)
 						jk = j - k;
 						for (int i = md1; i <= mdl; i++) {
 							ijk = i - jk;
-							A[ijk][j] += A[i][k]*t;	
+							A[ijk][j] += A[i][k]*t;
 						}
 					}
 				}
-			}	
-		}		
+			}
+		}
 	}
 	k = n;
 	if (A[md][n-1] == 0.0) {
 		ier = k;
 		ip[n-1] = 0;
 	}
-	
+
 	return (ier);
 
 }
 
 void solb(const int n, double **A, int ml, int mu, double *b, int *ip)
 {
-	
+
 /*-----------------------------------------------------------------------
 	Solution of linear system A*x = b
 
@@ -767,21 +767,21 @@ void solb(const int n, double **A, int ml, int mu, double *b, int *ip)
 		mu		upper bandwidth of A (diagonal not counted)
 		b		right hand side vector
 		ip		pivot vector obtained from dec
-		
+
 	Do not use if decb has set ier != 0
-	
+
 	Output:
 		b		solution vector, x
 
 -----------------------------------------------------------------------*/
-	  
+
 	int m, kb, nm1, md, md1, mdl, mdm, imd, kmd, lm;
 	double t;
 
 	md = ml + mu;
 	md1 = md + 1;
 	mdm = md - 1;
-	nm1 = n - 1;	  
+	nm1 = n - 1;
 	if (n != 1) {
 		if (ml != 0) {
 			for (int k = 0; k < nm1; k++) {
@@ -797,63 +797,63 @@ void solb(const int n, double **A, int ml, int mu, double *b, int *ip)
 			}
 		}
 		for (int k = 0; k < nm1; k++) {
-			kb = n - k - 1; 
+			kb = n - k - 1;
 			b[kb] = b[kb]/A[md][kb];
 			t = -b[kb];
 			kmd = md - kb;
-			lm = max(0, kmd); 
+			lm = max(0, kmd);
 			for (int i = lm; i <= mdm; i++) {
-				imd = i - kmd; 
+				imd = i - kmd;
 				b[imd] += A[i][kb]*t;
 			}
 		}
 	}
-	b[0] = b[0]/A[md][0]; 
-	
+	b[0] = b[0]/A[md][0];
+
 	return;
 
 }
 
 int decbc(const int n, double **AR, double **AI, int ml, int mu, int *ip)
 {
-	  
+
 /*-----------------------------------------------------------------------
 	Matrix Triangularization by Gaussian Elimination of a banded complex
 		matrix with lower bandwidth ml and upper bandwidth mu
-	
+
 	Input:
 		n			order of the original matrix A
 		AR, AI		contains the matrix in band storage.
 					The columns of the matrix are stored in the columns
-					of AR (real part) and AI (imaginary part) and the 
+					of AR (real part) and AI (imaginary part) and the
 					diagonals of the matrix are stored in rows ml through
 					2*ml+mu of AR and AI
 		ml			lower bandwidth of A (diagonal is not counted)
 		mu			upper bandwidth of A (diagonal is not counted)
-				
+
 	Output:
-		AR, AI		an upper triangular matrix in band storage and the 
+		AR, AI		an upper triangular matrix in band storage and the
 						multipliers which were used to obtain it
 		ip			index vector of pivot indices
 		ip[n-1]		(-1)^(number of interchanges) or 0
-		ier 		0 if matrix A is nonsingular, or k if found to be 
+		ier 		0 if matrix A is nonsingular, or k if found to be
 						singular at stage k
-			
+
 	Use solbc to obtain solution of linear system
-	
+
 	determ(A) = ip[n-1]*A[md][0]*A[md][1]*...*A[md][n-1] with md = ml+mu
-	
+
 	If ip[n-1] = 0, A is singular, solbc will divide by zero
-	
+
 	Reference:
 		This is a modification of:
 		C.B. Moler, Algorithm 423, Linear Equation Solver,
 		C.A.C.M. 15 (1972), p. 274.
------------------------------------------------------------------------*/	  
+-----------------------------------------------------------------------*/
 
 	int kp1, m, nm1, k, md, md1, mdl, mm, jk, ijk, ju, ier;
 	double tr, ti, den, prodr, prodi;
-	  
+
 	ier = 0;
 	ip[n-1] = 1;
 	md = ml + mu;
@@ -861,8 +861,8 @@ int decbc(const int n, double **AR, double **AI, int ml, int mu, int *ip)
 	ju = 0;
 	if ((n != 1) && (ml != 0)) {
 		if (n >= mu+2)
-			for (int j = mu + 1; j < n; j++) 
-				for (int i = 0; i < ml; i++) { 
+			for (int j = mu + 1; j < n; j++)
+				for (int i = 0; i < ml; i++) {
 					AR[i][j] = 0.0;
 					AI[i][j] = 0.0;
 				}
@@ -871,9 +871,9 @@ int decbc(const int n, double **AR, double **AI, int ml, int mu, int *ip)
 			kp1 = k + 1;
 			m = md;
 			mdl = min(ml, n-k-1) + md;
-			for (int i = md1; i <= mdl; i++) { 
+			for (int i = md1; i <= mdl; i++) {
 				if ((fabs(AR[i][k]) + fabs(AI[i][k])) >
-					(fabs(AR[m][k]) + fabs(AI[m][k]))) 
+					(fabs(AR[m][k]) + fabs(AI[m][k])))
 					m = i;
 			}
 			ip[k] = m + k - md;
@@ -894,13 +894,13 @@ int decbc(const int n, double **AR, double **AI, int ml, int mu, int *ip)
 			den = tr*tr + ti*ti;
 			tr = tr/den;
 			ti = -ti/den;
-			for (int i = md1; i <= mdl; i++) { 
+			for (int i = md1; i <= mdl; i++) {
 				prodr = AR[i][k]*tr - AI[i][k]*ti;
 				prodi = AI[i][k]*tr + AR[i][k]*ti;
 				AR[i][k] = -prodr;
 				AI[i][k] = -prodi;
 			}
-			ju = min(max(ju, mu+ip[k]+1), n); 
+			ju = min(max(ju, mu+ip[k]+1), n);
 			mm = md;
 			if (ju >= kp1) {
 				for (int j = kp1; j < ju; j++) {
@@ -918,7 +918,7 @@ int decbc(const int n, double **AR, double **AI, int ml, int mu, int *ip)
 					}
 					else if (ti == 0.0) {
 						jk = j - k;
-						for (int i = md1; i <= mdl; i++) { 
+						for (int i = md1; i <= mdl; i++) {
 							ijk = i - jk;
 							prodr = AR[i][k]*tr;
 							prodi = AI[i][k]*tr;
@@ -928,7 +928,7 @@ int decbc(const int n, double **AR, double **AI, int ml, int mu, int *ip)
 					}
 					else if (tr == 0.0) {
 						jk = j - k;
-						for (int i = md1; i <= mdl; i++) { 
+						for (int i = md1; i <= mdl; i++) {
 							ijk = i - jk;
 							prodr = -AI[i][k]*ti;
 							prodi = AR[i][k]*ti;
@@ -938,7 +938,7 @@ int decbc(const int n, double **AR, double **AI, int ml, int mu, int *ip)
 					}
 					else {
 						jk = j - k;
-						for (int i = md1; i <= mdl; i++) { 
+						for (int i = md1; i <= mdl; i++) {
 							ijk = i - jk;
 							prodr = AR[i][k]*tr - AI[i][k]*ti;
 							prodi = AI[i][k]*tr + AR[i][k]*ti;
@@ -948,10 +948,10 @@ int decbc(const int n, double **AR, double **AI, int ml, int mu, int *ip)
 					}
 				}
 			}
-		}	
-	}	
+		}
+	}
 	k = n;
-	if ((fabs(AR[md][n-1]) + fabs(AI[md][n-1])) == 0.0) { 
+	if ((fabs(AR[md][n-1]) + fabs(AI[md][n-1])) == 0.0) {
 		ier = k;
 		ip[n-1] = 0;
 	}
@@ -963,11 +963,11 @@ int decbc(const int n, double **AR, double **AI, int ml, int mu, int *ip)
 void solbc(const int n, double **AR, double **AI, int ml, int mu,
 	double *br, double *bi, int *ip)
 {
-	  
+
 /*-----------------------------------------------------------------------
 	Solution of linear system A*x = b
 		version banded and complex
-	
+
 	Input:
 		n			order of matrix
 		AR, AI		triangularized matrix obtained from decb
@@ -976,21 +976,21 @@ void solbc(const int n, double **AR, double **AI, int ml, int mu,
 		mu			upper bandwidth of A (diagonal is not counted)
 		br, bi		right hand side vector (real and imaginary parts)
 		ip			pivot vector obtained from decbc
-		
+
 	Do not use if decbc has set ier != 0
-	
+
 	Output:
 		br, bi		solution vector, x (real and imaginary parts)
 
 -----------------------------------------------------------------------*/
-	  
+
 	int nm1, m, kb, md, md1, mdl, mdm, imd, kmd, lm;
 	double den, prodr, prodi, tr, ti;
-  
+
 	md = ml + mu;
 	md1 = md + 1;
 	mdm = md - 1;
-	nm1 = n - 1;	  
+	nm1 = n - 1;
 	if (n != 1) {
 		if (ml != 0) {
 			for (int k = 0; k < nm1; k++) {
@@ -1002,14 +1002,14 @@ void solbc(const int n, double **AR, double **AI, int ml, int mu,
 				br[k] = tr;
 				bi[k] = ti;
 				mdl = min(ml, n-k-1) + md;
-				for (int i = md1; i <= mdl; i++) { 
+				for (int i = md1; i <= mdl; i++) {
 					imd = i + k - md;
 					prodr = AR[i][k]*tr - AI[i][k]*ti;
 					prodi = AI[i][k]*tr + AR[i][k]*ti;
 					br[imd] += prodr;
 					bi[imd] += prodi;
 				}
-			} 
+			}
 		}
  		for (int k = 0; k < nm1; k++) {
 			kb = n - k - 1;
@@ -1022,7 +1022,7 @@ void solbc(const int n, double **AR, double **AI, int ml, int mu,
 			ti = -bi[kb];
 			kmd = md - kb;
 			lm = max(0, kmd);
-			for (int i = lm; i <= mdm; i++) { 
+			for (int i = lm; i <= mdm; i++) {
 				imd = i - kmd;
 				prodr = AR[i][kb]*tr - AI[i][kb]*ti;
 				prodi = AI[i][kb]*tr + AR[i][kb]*ti;
@@ -1036,7 +1036,7 @@ void solbc(const int n, double **AR, double **AI, int ml, int mu,
 		br[0] = prodr/den;
 		bi[0] = prodi/den;
 	}
-	
+
 	return;
 
 }
@@ -1050,26 +1050,26 @@ void elmhes(const int n, int low, int igh, double **A, int *inter)
 	Num. Math. 12, 349-368(1968) by Martin and Wilkinson.
 	Handbook for Auto. Comp., Vol.II-Linear Algebra, 339-358(1971).
 
-	Given a real general matrix, this subroutine reduces a submatrix 
-	situated in rows and columns low through igh to upper Hessenberg 
+	Given a real general matrix, this subroutine reduces a submatrix
+	situated in rows and columns low through igh to upper Hessenberg
 	form by stabilized elementary similarity transformations.
 
 	Input:
 		n 		order of the matrix;
 
-		low, igh	integers determined by the balancing subroutine balanc. 
+		low, igh	integers determined by the balancing subroutine balanc.
 	  				If balanc has not been used, set low=0, igh=n;
 
 		A 		the input matrix.
 
 	Output:
 
-		A		contains the Hessenberg matrix. The multipliers which 
-	  			were used in the reduction are stored in the remaining 
+		A		contains the Hessenberg matrix. The multipliers which
+	  			were used in the reduction are stored in the remaining
 				triangle under the Hessenberg matrix;
 
 		inter	contains information on the rows and columns
-				interchanged in the reduction. Only elements low 
+				interchanged in the reduction. Only elements low
 				through igh are used.
 
 	Questions and comments should be directed to B. S. Garbow,
@@ -1094,7 +1094,7 @@ void elmhes(const int n, int low, int igh, double **A, int *inter)
 			}
 		}
 		inter[m] = ii;
-		if (ii != m) {		
+		if (ii != m) {
 //    :::::::::: interchange rows and columns of a ::::::::::
 			for (int j = mm1; j < n; j++) {
 				y = A[ii][j];
@@ -1106,7 +1106,7 @@ void elmhes(const int n, int low, int igh, double **A, int *inter)
 				A[j][ii] = A[j][m];
 				A[j][m] = y;
 			}
-		}  
+		}
 //    :::::::::: end interchange ::::::::::
 		if (x != 0.0) {
 			mp1 = m + 1;

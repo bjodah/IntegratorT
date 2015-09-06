@@ -8,6 +8,12 @@
 
 #include "NonStiffIntegratorT.h"
 
+using std::cout;
+using std::endl;
+using std::setprecision;
+using std::setw;
+using std::memcpy;
+
 // Constructors
 
 NonStiffIntegratorT::NonStiffIntegratorT(const int nin, double yin[], double xin,
@@ -24,7 +30,7 @@ NonStiffIntegratorT::NonStiffIntegratorT(const int nin, double yin[], double xin
 		cout << "Wrong input, iout = " << iout << endl;
 		throw -1;
 	}
-	
+
 	// facl, facr, parameters for step size selection
 	if (facl == 0.0) facl = 0.2;
 	if (facr == 0.0) facr = 10.0;
@@ -38,14 +44,14 @@ NonStiffIntegratorT::NonStiffIntegratorT(const int nin, double yin[], double xin
 		cout << "Curious input for beta : beta = " << beta << endl;
 		throw -1;
 	}
-	
+
 	// nstiff, parameter for stiffness detection
 	if (nstiff == 0) nstiff = 1000;
 	else if (nstiff < 0) nstiff = nmax + 10;
 
 	indir = NULL;
 	rcont1 = rcont2 = rcont3 = rcont4 = rcont5 = NULL;
-	
+
 	// nrdens, number of dense output components
 	if (nrdens > n) {
 		cout << "Curious input, nrdens = " << nrdens << endl;
@@ -66,7 +72,7 @@ NonStiffIntegratorT::NonStiffIntegratorT(const int nin, double yin[], double xin
 		}
 		else {
 			if (iout < 2) cout << "Warning : put iout = 2 for dense output\r\n";
-			for (int i = 0; i < n; i++) indir[i] = UINT_MAX;
+			for (int i = 0; i < n; i++) indir[i] = std::numeric_limits<int>::max();
 			for (int i = 0; i < nrdens; i++) indir[icont[i]] = i;
 		}
 	}
@@ -80,7 +86,7 @@ NonStiffIntegratorT::NonStiffIntegratorT(const int nin, double yin[], double xin
 	k5 = new double[n];
 	k6 = new double[n];
 	ysti = new double[n];
-	
+
 }  // Constructor
 
 NonStiffIntegratorT::~NonStiffIntegratorT()
@@ -470,12 +476,13 @@ int NonStiffIntegratorT::CoreIntegrator()
 // dense output function
 double NonStiffIntegratorT::ContinuousOutput(unsigned i)
 {
-	unsigned ii = UINT_MAX;
-
+    const unsigned uint_max = std::numeric_limits<unsigned>::max();
+    unsigned ii = uint_max;
+    //
 	if (!indir) ii = i;
 	else ii = indir[i];
 
-	if (ii == UINT_MAX) {
+	if (ii == uint_max) {
 		cout << "No dense output available for %uth component" << i << endl;
 		return 0.0;
 	}
@@ -487,7 +494,3 @@ double NonStiffIntegratorT::ContinuousOutput(unsigned i)
 		theta1*(rcont3[ii] + theta*(rcont4[ii] + theta1*rcont5[ii])));
 
 } // contd5
-
-
-
-
