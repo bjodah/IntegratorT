@@ -2,12 +2,13 @@ IntegratorT
 ===========
 This is a patched version of IntegratorT originally downloaded from
 http://www.unige.ch/~hairer/software.html (direct link: http://www.unige.ch/~hairer/prog/IntegratorT.tgz)
+
 It has been updated to build with recent versions of the GCC C++ compiler.
 
 Build status:
 
-.. image:: http://hera.physchem.kth.se:8080/github.com/bjodah/IntegratorT/status.svg?branch=master
-   :target: http://hera.physchem.kth.se:8080/github.com/bjodah/IntegratorT
+.. image:: http://hera.physchem.kth.se:9090/api/badges/bjodah/IntegratorT/status.svg
+   :target: http://hera.physchem.kth.se:9090/bjodah/IntegratorT
    :alt: Build status
 
 Below you will find the original README material:
