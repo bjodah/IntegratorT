@@ -10,6 +10,8 @@ Build status:
    :target: http://hera.physchem.kth.se:8080/github.com/bjodah/IntegratorT
    :alt: Build status
 
+Below you will find the original README material:
+
 
 **Last modified Jan. 30, 2003**
 
