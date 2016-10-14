@@ -1,6 +1,5 @@
-image: bjodah/dockerfile-bjodah-scicomp:14.04a
-git:
-    path: github.com/bjodah/IntegratorT
-script:
-  - make
-  - ./integrate
+build:
+  image: bjodah/bjodahimg16:v1.2
+  commands:
+    - make
+    - ./integrate
